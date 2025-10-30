@@ -5,17 +5,18 @@ import {
   loginStart,
   loginSuccess,
   loginFailure,
+  updateUser,
   clearError,
 } from "../store/slices/authSlice";
 import { Button, Input, Alert } from "../components/ui";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  // const [formData, setFormData] = useState({
+  //   email: "",
+  //   password: "",
+  // });
 
-  const { loading, error, isAuthenticated } = useSelector(
+  const { user, loading, error, isAuthenticated } = useSelector(
     (state) => state.auth
   );
   const dispatch = useDispatch();
@@ -31,10 +32,7 @@ const Login = () => {
   }, [isAuthenticated, navigate, from]);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    dispatch(updateUser({name: e.target.name, value: e.target.value}))
   };
 
   const handleSubmit = async (e) => {
@@ -47,19 +45,19 @@ const Login = () => {
     // Mock authentication
     setTimeout(() => {
       if (
-        formData.email === "teacher@school.com" &&
-        formData.password === "Vinay111"
+        user.email === "teacher@school.com" &&
+        user.password === "Vinay111"
       ) {
-        const user = {
+        
+        dispatch(loginSuccess({
           id: 1,
           name: "Vinay Teacher",
-          email: formData.email,
+          email: user.email,
           role: "teacher",
-        };
-        dispatch(loginSuccess(user));
+        }));
       } else {
         dispatch(loginFailure("Invalid email or password"));
-        setFormData({email:"", password:""})
+        // setFormData({email:"", password:""})
       }
     }, 1000);
   };
@@ -91,7 +89,7 @@ const Login = () => {
               name="email"
               type="email"
               placeholder="Enter your email"
-              value={formData.email}
+              value={user?.email??""}
               onChange={handleChange}
               required
             />
@@ -101,7 +99,7 @@ const Login = () => {
               name="password"
               type="password"
               placeholder="Enter your password"
-              value={formData.password}
+              value={user?.password??""}
               onChange={handleChange}
               required
             />

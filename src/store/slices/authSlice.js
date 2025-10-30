@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   
-  user: JSON.parse(localStorage.getItem("user")) || null,
+  user: JSON.parse(localStorage.getItem("user")) || {email:"", password:""},
   isAuthenticated: !!localStorage.getItem("user"),
   loading: false,
   error: null,
@@ -25,6 +25,12 @@ const authSlice = createSlice({
       localStorage.setItem("user", JSON.stringify(action.payload));
 
     },
+
+    updateUser: (state, action)=>{
+      const {name, value} = action.payload
+      state.user = {...state.user, [name]: value}
+    },
+
     loginFailure: (state, action) => {
       state.loading = false;
       state.isAuthenticated = false;
@@ -44,7 +50,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logout, clearError } = authSlice.actions;
+export const { loginStart, loginSuccess, loginFailure, updateUser, logout, clearError } = authSlice.actions;
 export default authSlice.reducer;
 
 
