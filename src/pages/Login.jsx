@@ -11,10 +11,6 @@ import {
 import { Button, Input, Alert } from "../components/ui";
 
 const Login = () => {
-  // const [formData, setFormData] = useState({
-  //   email: "",
-  //   password: "",
-  // });
 
   const { user, loading, error, isAuthenticated } = useSelector(
     (state) => state.auth
